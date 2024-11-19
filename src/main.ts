@@ -54,10 +54,10 @@ function displayMovieList (movie: IMovieResult):string {
   <li><span>Producer: </span> ${movie.producer}</li>
   <li><span>Release Date: </span> ${movie.release_date}</li>
   `
-  return resultAsString
+  return resultAsString;
 }
 
-
+//fetch characters
 charactersNavLink?.addEventListener('click', async() => {
   try {
     const response = await fetch(CHARACTERS_URL);
@@ -65,10 +65,10 @@ charactersNavLink?.addEventListener('click', async() => {
     console.log(data.results);
     
     outputSection.innerHTML = "";
-    data.results.forEach((result: IPeopleResult) => {
+    data.results.forEach(async (result: IPeopleResult) => {
       const characterList = document.createElement('ul') as HTMLUListElement;
       characterList.className = "character-list-style"
-      characterList.innerHTML = displayCharacterList(result);
+      characterList.innerHTML = await displayCharacterList(result);
       outputSection.appendChild(characterList)
     });
 
@@ -77,17 +77,25 @@ charactersNavLink?.addEventListener('click', async() => {
   }
 })
 
-function displayCharacterList(character: IPeopleResult): string{
+//display in html
+
+async function displayCharacterList(character: IPeopleResult){
+  const useInternalLink = await internalLink(character.homeworld) //necessary to get & show info behind the link in homeworld value
   const resultAsString = `
    <li><span>Name: </span> ${character.name}</li>
    <li><span>Birthyear: </span> ${character.birth_year}</li>
    <li><span>Gender: </span> ${character.gender}</li><span>
-   <li><span>Homeworld: </span> ${character.homeworld}</li>
+   <li><span>Homeworld: </span> ${useInternalLink}</li>
    <li><span>Films: </span> ${character.films}</li>
   `
   return resultAsString;
 }
 
+async function internalLink(homeworld:string):Promise<string> {
+  const response:Response = await fetch(homeworld);
+  const data:IPlanetResult = await response.json();
+  return data.name;
+}
 
 // fetch planets
 
