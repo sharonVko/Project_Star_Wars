@@ -2,10 +2,10 @@ export interface IMovie {
     count:    number;
     next:     null;
     previous: null;
-    results:  Result[];
+    results:  IMovieResult[];
 }
 
-export interface Result {
+export interface IMovieResult {
     title:         string;
     episode_id:    number;
     opening_crawl: string;

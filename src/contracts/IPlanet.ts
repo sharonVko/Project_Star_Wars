@@ -2,10 +2,10 @@ export interface IPlanet {
     count:    number;
     next:     string;
     previous: null;
-    results:  Result[];
+    results:  IPlanetResult[];
 }
 
-export interface Result {
+export interface IPlanetResult {
     name:            string;
     rotation_period: string;
     orbital_period:  string;
