@@ -1,5 +1,5 @@
 import { IMovieResult } from './contracts/IMovie';
-import { IPeopleResult } from './contracts/IPeople';
+import { IPeopleResult } from './contracts/IPeopleInterface';
 import { IPlanetResult } from './contracts/IPlanet';
 import './style.css'
 
