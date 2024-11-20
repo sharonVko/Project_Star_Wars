@@ -1,5 +1,5 @@
 import { IMovieResult } from './contracts/IMovie';
-import { IPeopleResult } from './contracts/Ipeople';
+import { IPeopleResult } from './contracts/IPeople';
 import { IPlanet, IPlanetResult } from './contracts/IPlanet';
 import './style.css'
 
@@ -80,18 +80,18 @@ charactersNavLink?.addEventListener('click', async() => {
 //display in html
 
 async function displayCharacterList(character: IPeopleResult){
-  const useInternalLink = await internalLink(character.homeworld) //necessary to get & show info behind the link in homeworld value
+  const useInternalLink = await internalPlanetLink(character.homeworld) //necessary to get & show info behind the link in homeworld value
   const resultAsString = `
    <li><span>Name: </span> ${character.name}</li>
    <li><span>Birthyear: </span> ${character.birth_year}</li>
    <li><span>Gender: </span> ${character.gender}</li><span>
    <li><span>Homeworld: </span> ${useInternalLink}</li>
-   <li><span>Films: </span> ${character.films}</li>
   `
   return resultAsString;
 }
 
-async function internalLink(homeworld:string):Promise<string> {
+//necessary to get info behind link of homeland value, calling in line 83
+async function internalPlanetLink(homeworld:string):Promise<string> {
   const response:Response = await fetch(homeworld);
   const data:IPlanetResult = await response.json();
   return data.name;
@@ -106,10 +106,10 @@ planetsNavLink?.addEventListener('click', async() => {
     console.log(data.results);
     
     outputSection.innerHTML = "";
-    data.results.forEach((result: IPlanetResult) => {
+    data.results.forEach(async(result: IPlanetResult) => {
       const planetList = document.createElement('ul') as HTMLUListElement;
       planetList.className = "planet-list-style";
-      planetList.innerHTML = displayPlanetsList(result);
+      planetList.innerHTML = await displayPlanetsList(result);
       outputSection.appendChild(planetList);
     })
   } catch (error) {
@@ -117,14 +117,31 @@ planetsNavLink?.addEventListener('click', async() => {
   }
 })
 
-function displayPlanetsList(planet: IPlanetResult){
+async function displayPlanetsList(planet: IPlanetResult){
+  const useInternalLink = await internalResidentLink(planet.residents)
   const resultAsString = `
   <li><span>Name: </span> ${planet.name}</li>
   <li><span>Terrain: </span> ${planet.terrain}</li>
-  <li><span>Climate: </span> ${planet.climate}}</li><span>
+  <li><span>Climate: </span> ${planet.climate}</li><span>
   <li><span>Diameter: </span> ${planet.diameter}</li>
   <li><span>Population: </span> ${planet.population}</li>
-  <li><span>Residents: </span> ${planet.residents}</li>
+  <li><span>Residents: </span> ${useInternalLink}</li>
   `
   return resultAsString;
 }
+
+/* async function internalResidentLink(residents : string[]): Promise<string[]> {
+  residents.forEach(async(resident)=> {
+    const response = await fetch(resident);
+    const data = await response.json();
+    return data.residents
+  })
+} */
+
+  async function internalResidentLink(residents: string[]): Promise<string[]> { // Verwende Promise.all, um alle Residents-URLs zu fetchen 
+    const residentNames = await Promise.all(residents.map(async (resident) => { 
+      const response = await fetch(resident); 
+      const data = await response.json(); 
+      return data.name; 
+      // Angenommen, dass das Feld "name" im Response vorhanden ist
+       })); return residentNames; }

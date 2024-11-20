@@ -94,3 +94,48 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+/* navbar styling */
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 1rem;
+}
+
+header nav ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul li {
+  margin-right: 1rem;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  background-color: #444;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+header nav ul li a:hover {
+  background-color: #555;
+}
+
+header nav div {
+  display: flex;
+  align-items: center;
+}
+
+header nav div input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
