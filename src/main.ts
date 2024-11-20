@@ -1,6 +1,6 @@
 import { IMovieResult } from './contracts/IMovie';
 import { IPeopleResult } from './contracts/IPeople';
-import { IPlanet, IPlanetResult } from './contracts/IPlanet';
+import { IPlanetResult } from './contracts/IPlanet';
 import './style.css'
 
 console.log("test");
