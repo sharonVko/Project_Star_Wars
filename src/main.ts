@@ -9,11 +9,10 @@ const moviesNavLink = document.querySelector('#movies-link') as HTMLAnchorElemen
 const charactersNavLink = document.querySelector('#characters-link') as HTMLAnchorElement;
 const planetsNavLink = document.querySelector('#planets-link') as  HTMLAnchorElement;
 const outputSection = document.querySelector('#output-section') as HTMLElement;
-
-console.log(moviesNavLink,charactersNavLink,planetsNavLink,outputSection);
+const searchInput = document.querySelector('#search-input') as HTMLInputElement;
+console.log(moviesNavLink,charactersNavLink,planetsNavLink,outputSection,searchInput);
 
 // api url & endpoints
-
 const BASE_URL = "https://swapi.dev/api/"
 
 const MOVIES_URL = `${BASE_URL}films/`
@@ -24,7 +23,6 @@ const PLANETS_URL = `${BASE_URL}planets/`
 
 
 //fetching characters on nav link click
-
 moviesNavLink?.addEventListener('click', async() => {
   try {
     const response = await fetch(MOVIES_URL);
@@ -45,7 +43,6 @@ moviesNavLink?.addEventListener('click', async() => {
 })
 
 //function to display list
-
 function displayMovieList (movie: IMovieResult):string {
   const resultAsString = `
   <li><span>Title: </span> ${movie.title}</li>
@@ -77,7 +74,6 @@ charactersNavLink?.addEventListener('click', async() => {
 })
 
 //display in html
-
 async function displayCharacterList(character: IPeopleResult){
   const useInternalLink = await internalPlanetLink(character.homeworld) //necessary to get & show info behind the link in homeworld value
   const resultAsString = `
@@ -97,7 +93,6 @@ async function internalPlanetLink(homeworld:string):Promise<string> {
 }
 
 // fetch planets
-
 planetsNavLink?.addEventListener('click', async() => {
   try {
     const response = await fetch (PLANETS_URL);
@@ -129,18 +124,109 @@ async function displayPlanetsList(planet: IPlanetResult){
   return resultAsString;
 }
 
-/* async function internalResidentLink(residents : string[]): Promise<string[]> {
-  residents.forEach(async(resident)=> {
-    const response = await fetch(resident);
-    const data = await response.json();
-    return data.residents
-  })
-} */
-
-  async function internalResidentLink(residents: string[]): Promise<string[]> { // Verwende Promise.all, um alle Residents-URLs zu fetchen 
+//function for internal links
+  async function internalResidentLink(residents: string[]): Promise<string[]> { // using Promise.all, to fetch all Residents-URLs  
     const residentNames = await Promise.all(residents.map(async (resident) => { 
-      const response = await fetch(resident); 
-      const data = await response.json(); 
+    const response = await fetch(resident); 
+    const data = await response.json(); 
       return data.name; 
-      // Angenommen, dass das Feld "name" im Response vorhanden ist
+      // supposing, "name" is existent in Response 
        })); return residentNames; }
+
+
+      
+// Search function for input field
+ searchInput?.addEventListener('input', async () => {
+   const searchTerm = searchInput.value.toLowerCase().trim();
+   let url = '';
+   if (searchTerm.length > 0) { 
+      if (outputSection.innerHTML.includes('movie-list-style')) { 
+        url = `${MOVIES_URL}?search=${searchTerm}`;
+        await searchMovies(url); 
+      } else if (outputSection.innerHTML.includes('character-list-style')) { 
+        url = `${CHARACTERS_URL}?search=${searchTerm}`; await searchCharacters(url);
+      } else if (outputSection.innerHTML.includes('planet-list-style')) {
+        url = `${PLANETS_URL}?search=${searchTerm}`;
+        await searchPlanets(url);
+      }
+     } else { outputSection.innerHTML = ''; // Clear results if search input is empty
+   } 
+  }); 
+
+// function to search and display movies
+    async function searchMovies(url: string) { 
+      try { 
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(data.results);
+
+        outputSection.innerHTML = "";
+        data.results.forEach((result: IMovieResult) => {
+          const movieList = document.createElement('ul') as HTMLUListElement;
+          movieList.className = "movie-list-style";
+          movieList.innerHTML = displayMovieList(result);
+          outputSection.appendChild(movieList);
+        });
+      } catch (error) {
+        console.error("fetch failed!", error);
+      }
+   };
+
+ // function to search and display characters
+     async function searchCharacters(url: string) {
+       try { const response = await fetch(url);
+        const data = await response.json();
+        console.log(data.results);
+         
+        outputSection.innerHTML = "";
+        data.results.forEach(async (result: IPeopleResult) => {
+          const characterList = document.createElement('ul') as HTMLUListElement; characterList.className = "character-list-style";
+          characterList.innerHTML = await displayCharacterList(result);
+          outputSection.appendChild(characterList);
+        });
+       } catch (error) {
+         console.error('fetch failed', error);
+       }
+    };
+
+ //function to search and display planets
+      async function searchPlanets(url: string) {
+         try { 
+          const response = await fetch(url);
+          const data = await response.json();
+          console.log(data.results);
+
+          outputSection.innerHTML = "";
+          data.results.forEach(async(result: IPlanetResult) => {
+            const planetList = document.createElement('ul') as HTMLUListElement;
+            planetList.className = "planet-list-style";
+            planetList.innerHTML = await displayPlanetsList(result);
+            outputSection.appendChild(planetList);
+           });
+           } catch (error) {
+             console.error('fetch failed', error);
+           }
+         };
+
+       //version 1
+       /* searchInput?.addEventListener('input', async() => {
+        const text = searchInput.value.toLowerCase().trim();
+        if(text) {
+          const response = await fetch (PLANETS_URL);
+          const data = await response.json();
+          const filteredPlanets = data.results.filter((planet: IPlanetResult) => planet.name.toLowerCase().includes(text));
+
+          outputSection.innerHTML = "";
+          filteredPlanets.forEach(async(result: IPlanetResult) => {
+            const planetList = document.createElement('ul')as HTMLUListElement;
+            planetList.className = "planet-list-style";
+            planetList.innerHTML = await displayPlanetsList(result);
+            outputSection.appendChild(planetList);
+          });
+        } else {
+          outputSection.innerHTML = "";
+
+        }
+       }); */
+
+       
