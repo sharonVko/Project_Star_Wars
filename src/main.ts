@@ -49,8 +49,7 @@ moviesNavLink?.addEventListener('click', async() => {
 function displayMovieList (movie: IMovieResult):string {
   const resultAsString = `
   <li><span>Title: </span> ${movie.title}</li>
-  <li><span>Characters: </span> ${movie.characters}</li>
-  <li><span>Director: </span> ${movie.director}</li><span>
+  <li><span>Director: </span> ${movie.director}</li>
   <li><span>Producer: </span> ${movie.producer}</li>
   <li><span>Release Date: </span> ${movie.release_date}</li>
   `
@@ -84,7 +83,7 @@ async function displayCharacterList(character: IPeopleResult){
   const resultAsString = `
    <li><span>Name: </span> ${character.name}</li>
    <li><span>Birthyear: </span> ${character.birth_year}</li>
-   <li><span>Gender: </span> ${character.gender}</li><span>
+   <li><span>Gender: </span> ${character.gender}</li>
    <li><span>Homeworld: </span> ${useInternalLink}</li>
   `
   return resultAsString;
@@ -122,7 +121,7 @@ async function displayPlanetsList(planet: IPlanetResult){
   const resultAsString = `
   <li><span>Name: </span> ${planet.name}</li>
   <li><span>Terrain: </span> ${planet.terrain}</li>
-  <li><span>Climate: </span> ${planet.climate}</li><span>
+  <li><span>Climate: </span> ${planet.climate}</li>
   <li><span>Diameter: </span> ${planet.diameter}</li>
   <li><span>Population: </span> ${planet.population}</li>
   <li><span>Residents: </span> ${useInternalLink}</li>
