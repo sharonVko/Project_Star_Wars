@@ -43,4 +43,4 @@ The design of Star Warpedia was created spontaneously to capture the essence of 
 ![screenshot](./src/assets/images/readMePreviewHome.png)
 ![screenshot](./src/assets/images/readMePreviewSearch.png)
 
-## Try it out on : https://project-star-wars-wd2403.netlify.app/#
+## Try it out here : [Starwarpedia](https://project-star-wars-wd2403.netlify.app/#)
